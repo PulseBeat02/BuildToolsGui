@@ -1,5 +1,8 @@
 package com.github.pulsebeat02.buildtoolsgui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum MinecraftVersion {
   VER_LATEST,
   VER_1_16_5,
@@ -32,13 +35,17 @@ public enum MinecraftVersion {
   VER_1_8_3,
   VER_1_8;
 
-  public static MinecraftVersion fromVersion(final String ver) {
+  private static final Map<String, MinecraftVersion> map;
+
+  static {
+    map = new HashMap<>();
     for (final MinecraftVersion mv : values()) {
-      if (mv.name().contains(ver)) {
-        return mv;
-      }
+      map.put(mv.getVersion(), mv);
     }
-    return VER_LATEST;
+  }
+
+  public static MinecraftVersion fromVersion(final String ver) {
+    return map.getOrDefault(ver, VER_LATEST);
   }
 
   public String getVersion() {

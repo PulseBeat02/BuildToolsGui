@@ -23,6 +23,7 @@ public class BuildToolsMenu extends JFrame {
   private JComboBox<String> mcSelectionList;
   private JTextField minMemoryField;
   private JTextField maxMemoryField;
+  private JTextField extraArgumentsField;
 
   public BuildToolsMenu() {
     initComponents();
@@ -61,7 +62,7 @@ public class BuildToolsMenu extends JFrame {
     mcSelectionList.setBounds(195, 25, 205, 30);
     contentPane.add(mcSelectionList);
 
-    final JTextField extraArgumentsField = new JTextField();
+    extraArgumentsField = new JTextField();
     extraArgumentsField.setBounds(192, 80, 210, 30);
     contentPane.add(extraArgumentsField);
 
@@ -93,20 +94,11 @@ public class BuildToolsMenu extends JFrame {
             disableComponents();
             final MinecraftVersion mv =
                 MinecraftVersion.fromVersion(String.valueOf(mcSelectionList.getSelectedItem()));
-            final StringBuilder sb = new StringBuilder(extraArgumentsField.getText());
-            final String minMem = minMemoryField.getText();
-            if (minMem != null && !minMem.isEmpty()) {
-              sb.append(" -Xms").append(minMem);
-            }
-            final String maxMem = maxMemoryField.getText();
-            if (maxMem != null && !maxMem.isEmpty()) {
-              sb.append(" -Xmx").append(maxMem);
-            }
-            panel.logInformation("Selecting Version: " + mv.getVersion());
+            System.out.println("Selecting Version: " + mv.getVersion());
             CompletableFuture.runAsync(
                 () -> {
                   try {
-                    panel.startBuildTools(mv, sb.toString());
+                    panel.startBuildTools(mv, constructArguments());
                   } catch (final IOException e) {
                     e.printStackTrace();
                   }
@@ -123,18 +115,7 @@ public class BuildToolsMenu extends JFrame {
           @Override
           public void mousePressed(final MouseEvent evt) {
             if (installingBuildTools) {
-              final int result =
-                  JOptionPane.showConfirmDialog(
-                      null,
-                      "Are you sure you want to close?\n" + "(BuildTools will stop)\n",
-                      "Close",
-                      JOptionPane.YES_NO_OPTION);
-              if (result == JOptionPane.YES_OPTION) {
-                if (BuildToolsPath.BUILDTOOLS_FOLDER_PATH.delete()) {
-                  System.out.println("Deleted BuildTools Folder");
-                }
-                System.exit(0);
-              }
+              openCloseDialog();
             } else {
               System.exit(0);
             }
@@ -149,11 +130,7 @@ public class BuildToolsMenu extends JFrame {
         new MouseAdapter() {
           @Override
           public void mousePressed(final MouseEvent evt) {
-            try {
-              Desktop.getDesktop().browse(new URI("https://github.com/PulseBeat02/BuildToolsGui"));
-            } catch (final IOException | URISyntaxException ioException) {
-              ioException.printStackTrace();
-            }
+            openRepository();
           }
         });
     contentPane.add(github);
@@ -176,5 +153,41 @@ public class BuildToolsMenu extends JFrame {
     mcSelectionList.setEnabled(true);
     minMemoryField.setEnabled(true);
     maxMemoryField.setEnabled(true);
+  }
+
+  public void openRepository() {
+    try {
+      Desktop.getDesktop().browse(new URI("https://github.com/PulseBeat02/BuildToolsGui"));
+    } catch (final IOException | URISyntaxException ioException) {
+      ioException.printStackTrace();
+    }
+  }
+
+  public String constructArguments() {
+    final StringBuilder sb = new StringBuilder(extraArgumentsField.getText());
+    final String minMem = minMemoryField.getText();
+    if (minMem != null && !minMem.isEmpty()) {
+      sb.append(" -Xms").append(minMem);
+    }
+    final String maxMem = maxMemoryField.getText();
+    if (maxMem != null && !maxMem.isEmpty()) {
+      sb.append(" -Xmx").append(maxMem);
+    }
+    return sb.toString();
+  }
+
+  public void openCloseDialog() {
+    final int result =
+        JOptionPane.showConfirmDialog(
+            null,
+            "Are you sure you want to close?\n" + "(BuildTools will stop)\n",
+            "Close",
+            JOptionPane.YES_NO_OPTION);
+    if (result == JOptionPane.YES_OPTION) {
+      if (BuildToolsPath.getBuildToolsFolderPath().delete()) {
+        System.out.println("Deleted BuildTools Folder");
+      }
+      System.exit(0);
+    }
   }
 }

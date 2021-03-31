@@ -18,4 +18,16 @@ public class BuildToolsPath {
     }
     BUILDTOOLS_JAR_PATH = new File(BUILDTOOLS_FOLDER_PATH, "/BuildTools.jar");
   }
+
+  public static File getWorkingDirectory() {
+    return WORKING_DIRECTORY;
+  }
+
+  public static File getBuildToolsFolderPath() {
+    return BUILDTOOLS_FOLDER_PATH;
+  }
+
+  public static File getBuildToolsJarPath() {
+    return BUILDTOOLS_JAR_PATH;
+  }
 }

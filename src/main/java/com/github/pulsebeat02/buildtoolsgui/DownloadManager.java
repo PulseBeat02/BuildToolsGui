@@ -9,10 +9,10 @@ import java.net.URL;
 public final class DownloadManager {
 
   public static File downloadBuildTools() {
+    final File file = BuildToolsPath.BUILDTOOLS_JAR_PATH;
     try (final BufferedInputStream in =
-            new BufferedInputStream(new URL(ArtifactURLs.BUILDTOOLS_URL).openStream());
-        final FileOutputStream fileOutputStream =
-            new FileOutputStream(BuildToolsPath.BUILDTOOLS_JAR_PATH)) {
+            new BufferedInputStream(new URL(ArtifactURLs.getBuildToolsUrl()).openStream());
+        final FileOutputStream fileOutputStream = new FileOutputStream(file)) {
       final byte[] dataBuffer = new byte[1024];
       int bytesRead;
       while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
@@ -21,6 +21,6 @@ public final class DownloadManager {
     } catch (final IOException e) {
       e.printStackTrace();
     }
-    return BuildToolsPath.BUILDTOOLS_JAR_PATH;
+    return file;
   }
 }

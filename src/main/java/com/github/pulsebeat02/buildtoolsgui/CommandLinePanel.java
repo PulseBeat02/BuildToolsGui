@@ -27,35 +27,41 @@ public class CommandLinePanel extends JPanel {
         new ProcessBuilder(
             "java",
             "-jar",
-            BuildToolsPath.BUILDTOOLS_JAR_PATH.getAbsolutePath(),
+            BuildToolsPath.getBuildToolsJarPath().getAbsolutePath(),
             "--rev",
             version.getVersion(),
             arguments);
-    builder.directory(BuildToolsPath.BUILDTOOLS_FOLDER_PATH);
+    builder.directory(BuildToolsPath.getBuildToolsFolderPath());
     final Process process = builder.start();
-    final BufferedReader reader =
-        new BufferedReader(new InputStreamReader(process.getInputStream()));
-    String line;
-    while ((line = reader.readLine()) != null) {
-      logInformation(line);
-    }
-    CompletableFuture.runAsync(() -> {
-      try {
-        if (process.waitFor() == 0) {
-          System.out.println("Successfully ran BuildTools");
-        } else {
-          System.err.println("An Exception has Occurred During BuildTools");
-        }
-        gui.enableComponents();
-      } catch (final InterruptedException e) {
-        e.printStackTrace();
-      }
-    });
+    logProcess(process);
+    CompletableFuture.runAsync(
+        () -> {
+          try {
+            if (process.waitFor() == 0) {
+              System.out.println("Successfully ran BuildTools");
+            } else {
+              System.err.println("An Exception has Occurred During BuildTools");
+            }
+            gui.enableComponents();
+          } catch (final InterruptedException e) {
+            e.printStackTrace();
+          }
+        });
   }
 
-
-
-  public void logInformation(final String line) {
-    System.out.println(line);
+  public void logProcess(final Process process) {
+    final BufferedReader reader =
+        new BufferedReader(new InputStreamReader(process.getInputStream()));
+    String line = "";
+    while (true) {
+      try {
+        if ((line = reader.readLine()) == null) {
+          break;
+        }
+      } catch (final IOException e) {
+        e.printStackTrace();
+      }
+      System.out.println(line);
+    }
   }
 }
