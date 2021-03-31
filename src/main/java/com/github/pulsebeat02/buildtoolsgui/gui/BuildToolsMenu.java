@@ -2,7 +2,7 @@
  * Created by JFormDesigner on Tue Mar 30 17:37:37 EDT 2021
  */
 
-package com.github.pulsebeat02.buildtoolsgui;
+package com.github.pulsebeat02.buildtoolsgui.gui;
 
 import javax.swing.*;
 import java.awt.*;

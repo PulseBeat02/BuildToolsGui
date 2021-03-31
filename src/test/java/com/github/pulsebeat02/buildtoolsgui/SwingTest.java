@@ -1,5 +1,7 @@
 package com.github.pulsebeat02.buildtoolsgui;
 
+import com.github.pulsebeat02.buildtoolsgui.gui.ConsoleArea;
+
 import javax.swing.*;
 
 public class SwingTest {

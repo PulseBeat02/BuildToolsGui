@@ -1,4 +1,4 @@
-package com.github.pulsebeat02.buildtoolsgui;
+package com.github.pulsebeat02.buildtoolsgui.gui;
 
 import javax.swing.*;
 import java.io.BufferedReader;
