@@ -36,6 +36,7 @@ public class BuildToolsGui extends JFrame {
     contentPane.setLayout(null);
 
     final CommandLinePanel panel = new CommandLinePanel();
+    panel.setBounds(20, 130, 760, 220);
 
     final JLabel mcVersionLabel = new JLabel();
     mcVersionLabel.setText("Select Minecraft Version");
@@ -59,10 +60,11 @@ public class BuildToolsGui extends JFrame {
     extraArgumentsField.setBounds(192, 80, 210, 30);
     contentPane.add(extraArgumentsField);
 
-    final JScrollPane consoleOutput = new JScrollPane();
-    consoleOutput.setViewportView(panel);
-    consoleOutput.setBounds(20, 130, 760, 220);
-    contentPane.add(consoleOutput);
+//    final JScrollPane consoleOutput = new JScrollPane();
+//    consoleOutput.setViewportView(panel);
+//    contentPane.add(consoleOutput);
+//    consoleOutput.setBounds(20, 130, 760, 220);
+    contentPane.add(panel);
 
     final JLabel minMemoryLabel = new JLabel();
     minMemoryLabel.setText("Min Memory (-Xmx)");
@@ -89,20 +91,23 @@ public class BuildToolsGui extends JFrame {
         new MouseAdapter() {
           @Override
           public void mousePressed(final MouseEvent evt) {
+            start.setEnabled(false);
             final MinecraftVersion mv =
                 MinecraftVersion.fromVersion(String.valueOf(mcSelectionList.getSelectedItem()));
-            final String args =
-                extraArgumentsField.getText()
-                    + " -Xms"
-                    + minMemoryField.getText()
-                    + " -Xmx"
-                    + maxMemoryField.getText();
-            assert mv != null;
+            final StringBuilder sb = new StringBuilder(extraArgumentsField.getText());
+            final String minMem = minMemoryField.getText();
+            if (minMem != null && !minMem.isEmpty()) {
+              sb.append(" -Xms").append(minMem);
+            }
+            final String maxMem = maxMemoryField.getText();
+            if (maxMem != null && !maxMem.isEmpty()) {
+              sb.append(" -Xmx").append(maxMem);
+            }
             panel.logInformation("Selecting Version: " + mv.getVersion());
             CompletableFuture.runAsync(
                 () -> {
                   try {
-                    panel.startBuildTools(mv, args);
+                    panel.startBuildTools(mv, sb.toString());
                   } catch (final IOException e) {
                     e.printStackTrace();
                   }

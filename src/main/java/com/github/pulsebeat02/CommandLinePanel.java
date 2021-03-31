@@ -30,14 +30,13 @@ public class CommandLinePanel extends JPanel {
             "--rev",
             version.getVersion(),
             arguments);
-    builder.directory(BuildToolsPath.WORKING_DIRECTORY);
+    builder.directory(BuildToolsPath.BUILDTOOLS_FOLDER_PATH);
     final Process process = builder.start();
     final BufferedReader reader =
         new BufferedReader(new InputStreamReader(process.getInputStream()));
     String line;
     while ((line = reader.readLine()) != null) {
-      console.append(line);
-      console.append(separator);
+      logInformation(line);
     }
   }
 

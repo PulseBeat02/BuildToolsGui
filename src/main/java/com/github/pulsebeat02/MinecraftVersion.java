@@ -32,7 +32,7 @@ public enum MinecraftVersion {
         return mv;
       }
     }
-    return null;
+    return VER_LATEST;
   }
 
   public String getVersion() {
