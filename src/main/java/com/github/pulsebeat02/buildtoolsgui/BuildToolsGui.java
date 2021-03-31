@@ -19,13 +19,13 @@ public class BuildToolsGui extends JFrame {
   private static final long serialVersionUID = 4909403567316540439L;
 
   private boolean installingBuildTools;
+  private JButton start;
+  private JComboBox<String> mcSelectionList;
+  private JTextField minMemoryField;
+  private JTextField maxMemoryField;
 
   public BuildToolsGui() {
     initComponents();
-  }
-
-  public static void main(final String[] args) {
-    new BuildToolsGui().setVisible(true);
   }
 
   private void initComponents() {
@@ -37,7 +37,7 @@ public class BuildToolsGui extends JFrame {
     final Container contentPane = getContentPane();
     contentPane.setLayout(null);
 
-    final CommandLinePanel panel = new CommandLinePanel();
+    final CommandLinePanel panel = new CommandLinePanel(this);
     final JScrollPane consoleOutput = new JScrollPane();
     consoleOutput.setViewportView(panel);
     consoleOutput.setBounds(20, 130, 760, 220);
@@ -53,7 +53,7 @@ public class BuildToolsGui extends JFrame {
     extraArgumentsLabel.setBounds(20, 80, 165, 25);
     contentPane.add(extraArgumentsLabel);
 
-    final JComboBox<String> mcSelectionList =
+    mcSelectionList =
         new JComboBox<>(
             Arrays.stream(MinecraftVersion.values())
                 .map(MinecraftVersion::getVersion)
@@ -70,7 +70,7 @@ public class BuildToolsGui extends JFrame {
     minMemoryLabel.setBounds(425, 80, 140, 30);
     contentPane.add(minMemoryLabel);
 
-    final JTextField minMemoryField = new JTextField();
+    minMemoryField = new JTextField();
     minMemoryField.setBounds(570, 80, 210, 30);
     contentPane.add(minMemoryField);
 
@@ -79,22 +79,18 @@ public class BuildToolsGui extends JFrame {
     maxMemoryLabel.setBounds(425, 25, 140, 30);
     contentPane.add(maxMemoryLabel);
 
-    final JTextField maxMemoryField = new JTextField();
+    maxMemoryField = new JTextField();
     maxMemoryField.setBounds(570, 25, 210, 30);
     contentPane.add(maxMemoryField);
 
-    final JButton start = new JButton();
+    start = new JButton();
     start.setText("Start");
     start.setBounds(20, 370, 195, 55);
     start.addMouseListener(
         new MouseAdapter() {
           @Override
           public void mousePressed(final MouseEvent evt) {
-            installingBuildTools = true;
-            start.setEnabled(false);
-            mcSelectionList.setEnabled(false);
-            minMemoryField.setEnabled(false);
-            maxMemoryField.setEnabled(false);
+            disableComponents();
             final MinecraftVersion mv =
                 MinecraftVersion.fromVersion(String.valueOf(mcSelectionList.getSelectedItem()));
             final StringBuilder sb = new StringBuilder(extraArgumentsField.getText());
@@ -164,5 +160,21 @@ public class BuildToolsGui extends JFrame {
 
     pack();
     setLocationRelativeTo(getOwner());
+  }
+
+  public void disableComponents() {
+    installingBuildTools = true;
+    start.setEnabled(false);
+    mcSelectionList.setEnabled(false);
+    minMemoryField.setEnabled(false);
+    maxMemoryField.setEnabled(false);
+  }
+
+  public void enableComponents() {
+    installingBuildTools = false;
+    start.setEnabled(true);
+    mcSelectionList.setEnabled(true);
+    minMemoryField.setEnabled(true);
+    maxMemoryField.setEnabled(true);
   }
 }

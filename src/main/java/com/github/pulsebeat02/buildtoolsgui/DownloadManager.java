@@ -4,9 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 public final class DownloadManager {
 
@@ -24,23 +22,5 @@ public final class DownloadManager {
       e.printStackTrace();
     }
     return BuildToolsPath.BUILDTOOLS_JAR_PATH;
-  }
-
-  public static int getBuildToolsFileSize() {
-    URLConnection conn = null;
-    try {
-      conn = new URL(ArtifactURLs.BUILDTOOLS_URL).openConnection();
-      if (conn instanceof HttpURLConnection) {
-        ((HttpURLConnection) conn).setRequestMethod("HEAD");
-      }
-      conn.getInputStream();
-      return conn.getContentLength();
-    } catch (final IOException e) {
-      throw new RuntimeException(e);
-    } finally {
-      if (conn instanceof HttpURLConnection) {
-        ((HttpURLConnection) conn).disconnect();
-      }
-    }
   }
 }
