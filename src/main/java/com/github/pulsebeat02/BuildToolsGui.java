@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public class BuildToolsGui extends JFrame {
@@ -46,13 +47,11 @@ public class BuildToolsGui extends JFrame {
     extraArgumentsLabel.setBounds(20, 80, 165, 25);
     contentPane.add(extraArgumentsLabel);
 
-    final JScrollPane mcSelectionList = new JScrollPane();
-    final DefaultListModel<String> before = new DefaultListModel<>();
-    final JList<String> list = new JList<>(before);
-    for (final MinecraftVersion mv : MinecraftVersion.values()) {
-      before.addElement(mv.getVersion());
-    }
-    mcSelectionList.setViewportView(list);
+    final JComboBox<String> mcSelectionList =
+        new JComboBox<>(
+            Arrays.stream(MinecraftVersion.values())
+                .map(MinecraftVersion::getVersion)
+                .toArray(String[]::new));
     mcSelectionList.setBounds(195, 25, 205, 30);
     contentPane.add(mcSelectionList);
 
@@ -90,7 +89,8 @@ public class BuildToolsGui extends JFrame {
         new MouseAdapter() {
           @Override
           public void mousePressed(final MouseEvent evt) {
-            final MinecraftVersion mv = MinecraftVersion.fromVersion(list.getSelectedValue());
+            final MinecraftVersion mv =
+                MinecraftVersion.fromVersion(String.valueOf(mcSelectionList.getSelectedItem()));
             final String args =
                 extraArgumentsField.getText()
                     + " -Xms"

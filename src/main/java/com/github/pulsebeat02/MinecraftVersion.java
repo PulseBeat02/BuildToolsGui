@@ -27,7 +27,7 @@ public enum MinecraftVersion {
   VER_1_10_2;
 
   public static MinecraftVersion fromVersion(final String ver) {
-    for (MinecraftVersion mv : values()) {
+    for (final MinecraftVersion mv : values()) {
       if (mv.name().contains(ver)) {
         return mv;
       }

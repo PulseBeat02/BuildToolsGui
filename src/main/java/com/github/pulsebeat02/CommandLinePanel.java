@@ -2,7 +2,6 @@ package com.github.pulsebeat02;
 
 import javax.swing.*;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -23,12 +22,18 @@ public class CommandLinePanel extends JPanel {
     final int size = DownloadManager.getBuildToolsFileSize();
     DownloadManager.downloadBuildTools(
         value -> logInformation("Downloaded " + (value / size) + "%"));
-    final File f = new File(System.getProperty("user.dir") + "/BuildTools.jar");
-    final Process process =
+    final ProcessBuilder builder =
         new ProcessBuilder(
-                "java", "-jar", f.getAbsolutePath(), "--rev", version.getVersion(), arguments)
-            .start();
-    final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            "java",
+            "-jar",
+            BuildToolsPath.BUILDTOOLS_JAR_PATH.getAbsolutePath(),
+            "--rev",
+            version.getVersion(),
+            arguments);
+    builder.directory(BuildToolsPath.WORKING_DIRECTORY);
+    final Process process = builder.start();
+    final BufferedReader reader =
+        new BufferedReader(new InputStreamReader(process.getInputStream()));
     String line;
     while ((line = reader.readLine()) != null) {
       console.append(line);

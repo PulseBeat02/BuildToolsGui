@@ -12,10 +12,10 @@ import java.util.function.IntConsumer;
 public final class DownloadManager {
 
   public static File downloadBuildTools(final IntConsumer consumer) {
-    final File file = new File(System.getProperty("user.dir") + "/BuildTools.jar");
     try (final BufferedInputStream in =
             new BufferedInputStream(new URL(ArtifactURLs.BUILDTOOLS_URL).openStream());
-         final FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+        final FileOutputStream fileOutputStream =
+            new FileOutputStream(BuildToolsPath.BUILDTOOLS_JAR_PATH)) {
       final byte[] dataBuffer = new byte[1024];
       int bytesRead;
       while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
@@ -25,23 +25,23 @@ public final class DownloadManager {
     } catch (final IOException e) {
       e.printStackTrace();
     }
-    return file;
+    return BuildToolsPath.BUILDTOOLS_JAR_PATH;
   }
 
   public static int getBuildToolsFileSize() {
     URLConnection conn = null;
     try {
       conn = new URL(ArtifactURLs.BUILDTOOLS_URL).openConnection();
-      if(conn instanceof HttpURLConnection) {
-        ((HttpURLConnection)conn).setRequestMethod("HEAD");
+      if (conn instanceof HttpURLConnection) {
+        ((HttpURLConnection) conn).setRequestMethod("HEAD");
       }
       conn.getInputStream();
       return conn.getContentLength();
     } catch (final IOException e) {
       throw new RuntimeException(e);
     } finally {
-      if(conn instanceof HttpURLConnection) {
-        ((HttpURLConnection)conn).disconnect();
+      if (conn instanceof HttpURLConnection) {
+        ((HttpURLConnection) conn).disconnect();
       }
     }
   }
