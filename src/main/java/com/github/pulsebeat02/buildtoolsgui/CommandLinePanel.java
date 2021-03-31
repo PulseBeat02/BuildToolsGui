@@ -1,4 +1,4 @@
-package com.github.pulsebeat02;
+package com.github.pulsebeat02.buildtoolsgui;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -8,20 +8,18 @@ import java.io.InputStreamReader;
 public class CommandLinePanel extends JPanel {
 
   private static final long serialVersionUID = -4069304377559214750L;
-  private final JTextArea console;
-  private final String separator;
 
   public CommandLinePanel() {
     setToolTipText("Command Line Output");
-    console = new JTextArea("Console");
-    separator = System.getProperty("line.separator");
+    final ConsoleArea console = new ConsoleArea();
+    add(console);
+    Runtime.getRuntime().addShutdownHook(new Thread(console::close));
   }
 
   public void startBuildTools(final MinecraftVersion version, final String arguments)
       throws IOException {
     final int size = DownloadManager.getBuildToolsFileSize();
-    DownloadManager.downloadBuildTools(
-        value -> logInformation("Downloaded " + (value / size) + "%"));
+    DownloadManager.downloadBuildTools();
     final ProcessBuilder builder =
         new ProcessBuilder(
             "java",
@@ -41,7 +39,6 @@ public class CommandLinePanel extends JPanel {
   }
 
   public void logInformation(final String line) {
-    console.append(line);
-    console.append(separator);
+    System.out.println(line);
   }
 }

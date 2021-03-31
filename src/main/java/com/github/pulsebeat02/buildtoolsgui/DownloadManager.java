@@ -1,4 +1,4 @@
-package com.github.pulsebeat02;
+package com.github.pulsebeat02.buildtoolsgui;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -7,11 +7,10 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.function.IntConsumer;
 
 public final class DownloadManager {
 
-  public static File downloadBuildTools(final IntConsumer consumer) {
+  public static File downloadBuildTools() {
     try (final BufferedInputStream in =
             new BufferedInputStream(new URL(ArtifactURLs.BUILDTOOLS_URL).openStream());
         final FileOutputStream fileOutputStream =
@@ -19,7 +18,6 @@ public final class DownloadManager {
       final byte[] dataBuffer = new byte[1024];
       int bytesRead;
       while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-        consumer.accept(bytesRead);
         fileOutputStream.write(dataBuffer, 0, bytesRead);
       }
     } catch (final IOException e) {

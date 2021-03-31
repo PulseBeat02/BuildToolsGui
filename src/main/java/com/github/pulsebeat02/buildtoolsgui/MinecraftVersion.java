@@ -1,4 +1,4 @@
-package com.github.pulsebeat02;
+package com.github.pulsebeat02.buildtoolsgui;
 
 public enum MinecraftVersion {
   VER_LATEST,

@@ -2,7 +2,7 @@
  * Created by JFormDesigner on Tue Mar 30 17:37:37 EDT 2021
  */
 
-package com.github.pulsebeat02;
+package com.github.pulsebeat02.buildtoolsgui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +17,8 @@ import java.util.concurrent.CompletableFuture;
 public class BuildToolsGui extends JFrame {
 
   private static final long serialVersionUID = 4909403567316540439L;
+
+  private boolean installingBuildTools;
 
   public BuildToolsGui() {
     initComponents();
@@ -36,7 +38,10 @@ public class BuildToolsGui extends JFrame {
     contentPane.setLayout(null);
 
     final CommandLinePanel panel = new CommandLinePanel();
-    panel.setBounds(20, 130, 760, 220);
+    final JScrollPane consoleOutput = new JScrollPane();
+    consoleOutput.setViewportView(panel);
+    consoleOutput.setBounds(20, 130, 760, 220);
+    contentPane.add(consoleOutput);
 
     final JLabel mcVersionLabel = new JLabel();
     mcVersionLabel.setText("Select Minecraft Version");
@@ -59,12 +64,6 @@ public class BuildToolsGui extends JFrame {
     final JTextField extraArgumentsField = new JTextField();
     extraArgumentsField.setBounds(192, 80, 210, 30);
     contentPane.add(extraArgumentsField);
-
-//    final JScrollPane consoleOutput = new JScrollPane();
-//    consoleOutput.setViewportView(panel);
-//    contentPane.add(consoleOutput);
-//    consoleOutput.setBounds(20, 130, 760, 220);
-    contentPane.add(panel);
 
     final JLabel minMemoryLabel = new JLabel();
     minMemoryLabel.setText("Min Memory (-Xmx)");
@@ -91,7 +90,11 @@ public class BuildToolsGui extends JFrame {
         new MouseAdapter() {
           @Override
           public void mousePressed(final MouseEvent evt) {
+            installingBuildTools = true;
             start.setEnabled(false);
+            mcSelectionList.setEnabled(false);
+            minMemoryField.setEnabled(false);
+            maxMemoryField.setEnabled(false);
             final MinecraftVersion mv =
                 MinecraftVersion.fromVersion(String.valueOf(mcSelectionList.getSelectedItem()));
             final StringBuilder sb = new StringBuilder(extraArgumentsField.getText());
@@ -123,7 +126,22 @@ public class BuildToolsGui extends JFrame {
         new MouseAdapter() {
           @Override
           public void mousePressed(final MouseEvent evt) {
-            System.exit(0);
+            if (installingBuildTools) {
+              final int result =
+                  JOptionPane.showConfirmDialog(
+                      null,
+                      "Are you sure you want to close?\n" + "(BuildTools will stop)\n",
+                      "Close",
+                      JOptionPane.YES_NO_OPTION);
+              if (result == JOptionPane.YES_OPTION) {
+                if (BuildToolsPath.BUILDTOOLS_FOLDER_PATH.delete()) {
+                  System.out.println("Deleted BuildTools Folder");
+                }
+                System.exit(0);
+              }
+            } else {
+              System.exit(0);
+            }
           }
         });
     contentPane.add(close);
