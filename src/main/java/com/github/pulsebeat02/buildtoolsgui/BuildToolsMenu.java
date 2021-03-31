@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
-public class BuildToolsGui extends JFrame {
+public class BuildToolsMenu extends JFrame {
 
   private static final long serialVersionUID = 4909403567316540439L;
 
@@ -24,7 +24,7 @@ public class BuildToolsGui extends JFrame {
   private JTextField minMemoryField;
   private JTextField maxMemoryField;
 
-  public BuildToolsGui() {
+  public BuildToolsMenu() {
     initComponents();
   }
 

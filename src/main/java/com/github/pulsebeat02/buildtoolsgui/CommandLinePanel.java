@@ -10,9 +10,9 @@ public class CommandLinePanel extends JPanel {
 
   private static final long serialVersionUID = -4069304377559214750L;
 
-  private final BuildToolsGui gui;
+  private final BuildToolsMenu gui;
 
-  public CommandLinePanel(final BuildToolsGui gui) {
+  public CommandLinePanel(final BuildToolsMenu gui) {
     this.gui = gui;
     setToolTipText("Command Line Output");
     final ConsoleArea console = new ConsoleArea();

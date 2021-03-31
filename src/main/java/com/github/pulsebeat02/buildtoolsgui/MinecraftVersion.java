@@ -24,7 +24,13 @@ public enum MinecraftVersion {
   VER_1_11_2,
   VER_1_11_1,
   VER_1_11,
-  VER_1_10_2;
+  VER_1_10_2,
+  VER_1_9_4,
+  VER_1_9_2,
+  VER_1_9,
+  VER_1_8_8,
+  VER_1_8_3,
+  VER_1_8;
 
   public static MinecraftVersion fromVersion(final String ver) {
     for (final MinecraftVersion mv : values()) {
