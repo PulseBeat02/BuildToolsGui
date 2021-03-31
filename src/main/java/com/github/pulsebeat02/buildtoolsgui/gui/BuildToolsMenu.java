@@ -67,7 +67,7 @@ public class BuildToolsMenu extends JFrame {
     contentPane.add(extraArgumentsField);
 
     final JLabel minMemoryLabel = new JLabel();
-    minMemoryLabel.setText("Min Memory (-Xmx)");
+    minMemoryLabel.setText("Min Memory (-Xms)");
     minMemoryLabel.setBounds(425, 80, 140, 30);
     contentPane.add(minMemoryLabel);
 
